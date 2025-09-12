@@ -1,6 +1,8 @@
 # Base image
 FROM node:18-alpine AS base
 
+ARG PORT
+
 # Dependencies
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
@@ -24,5 +26,5 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
-# EXPOSE 3001
+EXPOSE ${PORT}
 CMD ["node", "server.js"]
