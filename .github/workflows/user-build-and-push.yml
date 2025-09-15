@@ -30,13 +30,10 @@ jobs:
       - name: Build image
         run: |
           docker build -f user/Dockerfile -t ${{ secrets.REGISTRY_DOMAIN }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} user/
-          docker tag ${{ secrets.REGISTRY_DOMAIN }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
-            ${{ secrets.REGISTRY_DOMAIN }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:latest
 
       - name: Push image
         run: |
           docker push ${{ secrets.REGISTRY_DOMAIN }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
-          docker push ${{ secrets.REGISTRY_DOMAIN }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:latest
 
       - name: Trigger Dokploy Deployment
         run: |
