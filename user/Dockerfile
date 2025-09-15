@@ -20,6 +20,7 @@ RUN npm run build
 # Production runner
 FROM base AS runner
 WORKDIR /app
+ENV PORT=${PORT}
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
