@@ -29,4 +29,4 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
 EXPOSE $PORT
 
-CMD ["npx", "next", "start"]
+CMD ["node", "server.js"]
