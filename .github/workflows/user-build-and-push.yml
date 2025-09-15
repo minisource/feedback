@@ -37,3 +37,16 @@ jobs:
         run: |
           docker push ${{ secrets.REGISTRY_DOMAIN }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
           docker push ${{ secrets.REGISTRY_DOMAIN }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Trigger Dokploy Deployment
+        run: |
+          curl -X 'POST' \
+          "https://${{ secrets.DOKPLOY_DOMAIN }}/api/trpc/application.deploy" \
+          -H 'accept: application/json' \
+          -H "x-api-key: ${{ secrets.DOKPLOY_API_KEY }}" \
+          -H 'Content-Type: application/json' \
+          -d "{
+              \"json\": {
+                \"applicationId\": \"${{ secrets.DOKPLOY_APP_ID }}\"
+              }
+          }"
