@@ -41,12 +41,10 @@ jobs:
       - name: Trigger Dokploy Deployment
         run: |
           curl -X 'POST' \
-          "https://${{ secrets.DOKPLOY_DOMAIN }}/api/trpc/compose.deploy" \
+          "https://${{ secrets.DOKPLOY_DOMAIN }}/api/compose.deploy" \
           -H 'accept: application/json' \
           -H "x-api-key: ${{ secrets.DOKPLOY_API_KEY }}" \
           -H 'Content-Type: application/json' \
           -d "{
-              \"json\": {
                 \"composeId\": \"${{ secrets.DOKPLOY_COMPOSE_ID }}\"
-              }
           }"
