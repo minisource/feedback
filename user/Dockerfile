@@ -26,12 +26,7 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --chown=nextjs:nodejs .env ./
 USER nextjs
 EXPOSE $PORT
 
-# Option 1: اگر server.js وجود داره
-# CMD ["node", "server.js"]
-
-# Option 2: اگر Next.js 15 دیگه server.js نسازه
-CMD ["sh", "-c", "export $(cat .env | xargs) && npx next start -H 0.0.0.0"]
+CMD ["npx", "next", "start", "-H", "0.0.0.0"]
