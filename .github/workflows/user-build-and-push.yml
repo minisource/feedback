@@ -36,7 +36,7 @@ jobs:
           sed "s|${{ secrets.REGISTRY_DOMAIN }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}.*|$IMAGE|" user/docker-compose.yml > docker-compose.generated.yml
 
           PAYLOAD=$(jq -Rs . < docker-compose.generated.yml)
-          curl -X 'PUT' \
+          curl -X 'POST' \
           "https://${{ secrets.DOKPLOY_DOMAIN }}/api/compose.update" \
           -H "x-api-key: ${{ secrets.DOKPLOY_API_KEY }}" \
           -H 'accept: application/json' \
