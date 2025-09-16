@@ -1,10 +1,6 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - PORT=${PORT}
+    image: registry.minisource.ir/feedback/feedback
     ports:
       - "${PORT}:${PORT}"
     env_file:

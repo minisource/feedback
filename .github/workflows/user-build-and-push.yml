@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set variables
         run: |
@@ -20,28 +19,47 @@ jobs:
           IMAGE_NAME=$(basename "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
-          echo "Generated Tag: $TAG"
 
       - name: Log in to Registry
         run: |
           echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ secrets.REGISTRY_DOMAIN }} \
             -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
 
-      - name: Build image
+      - name: Build and Push Image
         run: |
           docker build -f user/Dockerfile -t ${{ secrets.REGISTRY_DOMAIN }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} user/
-
-      - name: Push image
-        run: |
           docker push ${{ secrets.REGISTRY_DOMAIN }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+
+      - name: Update Compose in Dokploy
+        run: |
+          IMAGE="${{ secrets.REGISTRY_DOMAIN }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}"
+          sed "s|${{ secrets.REGISTRY_DOMAIN }}/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}.*|$IMAGE|" user/docker-compose.yml > docker-compose.generated.yml
+
+          PAYLOAD=$(jq -Rs . < docker-compose.generated.yml)
+          curl -X 'PUT' \
+          "https://${{ secrets.DOKPLOY_DOMAIN }}/api/compose.update" \
+          -H "x-api-key: ${{ secrets.DOKPLOY_API_KEY }}" \
+          -H 'accept: application/json' \
+          -H 'Content-Type: application/json' \
+          -d "{
+                \"composeId\": \"${{ secrets.DOKPLOY_COMPOSE_ID }}\",
+                \"composeFile\": $PAYLOAD
+          }"
 
       - name: Trigger Dokploy Deployment
         run: |
           curl -X 'POST' \
           "https://${{ secrets.DOKPLOY_DOMAIN }}/api/compose.deploy" \
-          -H 'accept: application/json' \
           -H "x-api-key: ${{ secrets.DOKPLOY_API_KEY }}" \
+          -H 'accept: application/json' \
           -H 'Content-Type: application/json' \
           -d "{
                 \"composeId\": \"${{ secrets.DOKPLOY_COMPOSE_ID }}\"
           }"
+
+      - name: Clean Dokploy
+        run: |
+          curl -X 'POST' \
+          "https://${{ secrets.DOKPLOY_DOMAIN }}/api/settings.cleanAll" \
+          -H "x-api-key: ${{ secrets.DOKPLOY_API_KEY }}" \
+          -H 'accept: application/json'
