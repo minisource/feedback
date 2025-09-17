@@ -4,7 +4,7 @@ import React from 'react';
 export default function HomePage() {
   return (
     <div>
-      <h1>this is test devops</h1>
+      <h1>this is test</h1>
       <p>This is the home page.</p>
     </div>
   );
