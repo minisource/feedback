@@ -30,6 +30,8 @@ jobs:
           api_key: ${{ secrets.DOKPLOY_API_KEY }}
           compose_id: ${{ secrets.DOKPLOY_COMPOSE_ID }}
           registry_domain: ${{ secrets.REGISTRY_DOMAIN }}
+          registry_username: ${{ secrets.REGISTRY_USERNAME }}
+          registry_token: ${{ secrets.REGISTRY_PASSWORD }}
           image_name: ${{ env.IMAGE_NAME }}
           tag: ${{ env.TAG }}
           dockerfile_path: user/Dockerfile
