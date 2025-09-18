@@ -24,7 +24,7 @@ jobs:
 
 
       - name: Dokploy Compose Deploy
-        uses: ebrahimkhodadadi/dokploy-action@v1
+        uses: minisource/dokploy-action@v1
         with:
           dokploy_domain: ${{ secrets.DOKPLOY_DOMAIN }}
           api_key: ${{ secrets.DOKPLOY_API_KEY }}
