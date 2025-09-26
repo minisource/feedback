@@ -1,6 +1,6 @@
 services:
   app:
-    image: registry.minisource.ir/feedback/feedback
+    image: IMAGE_FULL
     ports:
       - "${PORT}:${PORT}"
     env_file:
