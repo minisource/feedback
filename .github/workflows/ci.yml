@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    uses: minisource/.github/.github/workflows/build-and-push.yml@main
+    with:
+      image-name: minisource/feedback-backend
+      dockerfile-path: ./backend/Dockerfile
+      build-context: ./backend
+    secrets: inherit
+
+  user:
+    uses: minisource/.github/.github/workflows/build-and-push.yml@main
+    with:
+      image-name: minisource/feedback-user
+      dockerfile-path: ./user/Dockerfile
+      build-context: ./user
+    secrets: inherit
