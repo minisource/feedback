@@ -1,0 +1,1523 @@
+basePath: /api/v1
+definitions:
+  comment.Attachment:
+    properties:
+      filename:
+        type: string
+      id:
+        type: string
+      mimeType:
+        type: string
+      size:
+        type: integer
+      type:
+        type: string
+      uploadedAt:
+        type: string
+      url:
+        type: string
+    type: object
+  comment.Comment:
+    properties:
+      attachments:
+        items:
+          $ref: '#/definitions/comment.Attachment'
+        type: array
+      authorAvatar:
+        type: string
+      authorEmail:
+        type: string
+      authorId:
+        description: Author info
+        type: string
+      authorName:
+        type: string
+      content:
+        description: Content
+        type: string
+      contentHtml:
+        type: string
+      createdAt:
+        description: Timestamps
+        type: string
+      deletedAt:
+        type: string
+      depth:
+        description: Depth for nested replies
+        type: integer
+      dislikeCount:
+        type: integer
+      id:
+        type: string
+      isAnonymous:
+        type: boolean
+      isDeleted:
+        type: boolean
+      isEdited:
+        type: boolean
+      isPinned:
+        description: Features
+        type: boolean
+      likeCount:
+        type: integer
+      metadata:
+        additionalProperties: {}
+        description: Metadata
+        type: object
+      moderatedAt:
+        type: string
+      moderatedBy:
+        type: string
+      parentId:
+        type: string
+      pinnedAt:
+        type: string
+      reactionCounts:
+        additionalProperties:
+          type: integer
+        type: object
+      rejectionReason:
+        type: string
+      replyCount:
+        description: Stats
+        type: integer
+      reportCount:
+        type: integer
+      resourceId:
+        type: string
+      resourceType:
+        type: string
+      rootId:
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/comment.CommentStatus'
+        description: Moderation
+      tenantId:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  comment.CommentStats:
+    properties:
+      approvedCount:
+        type: integer
+      pendingCount:
+        type: integer
+      reactionBreakdown:
+        additionalProperties:
+          format: int64
+          type: integer
+        type: object
+      rejectedCount:
+        type: integer
+      totalComments:
+        type: integer
+    type: object
+  comment.CommentStatus:
+    enum:
+    - pending
+    - approved
+    - rejected
+    - spam
+    type: string
+    x-enum-varnames:
+    - StatusPending
+    - StatusApproved
+    - StatusRejected
+    - StatusSpam
+  comment.ListCommentsResponse:
+    properties:
+      comments:
+        items:
+          $ref: '#/definitions/comment.Comment'
+        type: array
+      page:
+        type: integer
+      pageSize:
+        type: integer
+      total:
+        type: integer
+      totalPages:
+        type: integer
+    type: object
+  comment.RepliesResponse:
+    properties:
+      replies:
+        items:
+          $ref: '#/definitions/comment.Comment'
+        type: array
+      total:
+        type: integer
+    type: object
+  github_com_minisource_feedback_internal_models.AddAttachmentRequest:
+    properties:
+      mimeType:
+        type: string
+      name:
+        type: string
+      size:
+        type: integer
+      storageId:
+        type: string
+      url:
+        type: string
+    required:
+    - name
+    - storageId
+    - url
+    type: object
+  github_com_minisource_feedback_internal_models.Attachment:
+    properties:
+      id:
+        type: string
+      mimeType:
+        type: string
+      name:
+        type: string
+      size:
+        type: integer
+      storageId:
+        description: ID from storage service
+        type: string
+      uploadedAt:
+        type: string
+      url:
+        type: string
+    type: object
+  github_com_minisource_feedback_internal_models.Category:
+    properties:
+      children:
+        description: For response - nested children (not stored in DB)
+        items:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.Category'
+        type: array
+      color:
+        type: string
+      createdAt:
+        description: Timestamps
+        type: string
+      description:
+        type: string
+      feedbackCount:
+        description: Stats
+        type: integer
+      icon:
+        type: string
+      id:
+        type: string
+      isActive:
+        type: boolean
+      name:
+        type: string
+      parentId:
+        description: Parent category for hierarchical structure
+        type: string
+      slug:
+        type: string
+      sortOrder:
+        type: integer
+      tenantId:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  github_com_minisource_feedback_internal_models.CategorySummary:
+    properties:
+      color:
+        type: string
+      icon:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      slug:
+        type: string
+    type: object
+  github_com_minisource_feedback_internal_models.ContributorStats:
+    properties:
+      commentCount:
+        type: integer
+      feedbackCount:
+        type: integer
+      userId:
+        type: string
+      userName:
+        type: string
+      voteCount:
+        type: integer
+    type: object
+  github_com_minisource_feedback_internal_models.CreateCategoryRequest:
+    properties:
+      color:
+        type: string
+      description:
+        maxLength: 500
+        type: string
+      icon:
+        type: string
+      name:
+        maxLength: 100
+        type: string
+      parentId:
+        type: string
+      slug:
+        type: string
+      sortOrder:
+        type: integer
+    required:
+    - name
+    type: object
+  github_com_minisource_feedback_internal_models.CreateCommentRequest:
+    properties:
+      content:
+        maxLength: 2000
+        type: string
+      isAnonymous:
+        type: boolean
+      parentId:
+        type: string
+    required:
+    - content
+    type: object
+  github_com_minisource_feedback_internal_models.CreateFeedbackRequest:
+    properties:
+      attachments:
+        items:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.AddAttachmentRequest'
+        type: array
+      categoryId:
+        type: string
+      description:
+        maxLength: 10000
+        type: string
+      isAnonymous:
+        type: boolean
+      tags:
+        items:
+          type: string
+        type: array
+      tenantId:
+        type: string
+      title:
+        maxLength: 200
+        type: string
+    required:
+    - description
+    - title
+    type: object
+  github_com_minisource_feedback_internal_models.Feedback:
+    properties:
+      approvedAt:
+        type: string
+      attachments:
+        description: Attachments (uploaded via storage service)
+        items:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.Attachment'
+        type: array
+      authorAvatar:
+        type: string
+      authorEmail:
+        type: string
+      authorId:
+        description: Author information
+        type: string
+      authorName:
+        type: string
+      categoryId:
+        description: Category and tags
+        type: string
+      categoryName:
+        type: string
+      commentCount:
+        type: integer
+      completedAt:
+        type: string
+      createdAt:
+        description: Timestamps
+        type: string
+      deletedAt:
+        description: Soft delete
+        type: string
+      deletedBy:
+        type: string
+      description:
+        type: string
+      downvotes:
+        type: integer
+      id:
+        type: string
+      isAnonymous:
+        type: boolean
+      officialResponse:
+        allOf:
+        - $ref: '#/definitions/github_com_minisource_feedback_internal_models.OfficialResponse'
+        description: Admin response
+      status:
+        $ref: '#/definitions/github_com_minisource_feedback_internal_models.FeedbackStatus'
+      tags:
+        items:
+          type: string
+        type: array
+      tenantId:
+        type: string
+      title:
+        type: string
+      trendingScore:
+        description: Trending score (calculated based on votes, comments, views, and
+          time decay)
+        type: number
+      updatedAt:
+        type: string
+      upvotes:
+        description: Voting
+        type: integer
+      viewCount:
+        description: Engagement metrics
+        type: integer
+      voteScore:
+        description: upvotes - downvotes
+        type: integer
+    type: object
+  github_com_minisource_feedback_internal_models.FeedbackResponse:
+    properties:
+      attachments:
+        items:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.Attachment'
+        type: array
+      authorId:
+        type: string
+      authorName:
+        type: string
+      category:
+        $ref: '#/definitions/github_com_minisource_feedback_internal_models.CategorySummary'
+      categoryId:
+        type: string
+      commentCount:
+        type: integer
+      createdAt:
+        type: string
+      description:
+        type: string
+      downvotes:
+        type: integer
+      id:
+        type: string
+      isSubscribed:
+        type: boolean
+      officialResponse:
+        $ref: '#/definitions/github_com_minisource_feedback_internal_models.OfficialResponse'
+      status:
+        $ref: '#/definitions/github_com_minisource_feedback_internal_models.FeedbackStatus'
+      tags:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+      updatedAt:
+        type: string
+      upvotes:
+        type: integer
+      userVote:
+        type: string
+      viewCount:
+        type: integer
+      voteScore:
+        type: integer
+    type: object
+  github_com_minisource_feedback_internal_models.FeedbackStats:
+    properties:
+      feedbackByCategory:
+        additionalProperties:
+          format: int64
+          type: integer
+        type: object
+      feedbackByStatus:
+        additionalProperties:
+          format: int64
+          type: integer
+        type: object
+      recentActivity:
+        description: Last 24 hours
+        type: integer
+      topContributors:
+        items:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.ContributorStats'
+        type: array
+      totalComments:
+        type: integer
+      totalFeedback:
+        type: integer
+      totalVotes:
+        type: integer
+    type: object
+  github_com_minisource_feedback_internal_models.FeedbackStatus:
+    enum:
+    - pending
+    - approved
+    - rejected
+    - under_review
+    - planned
+    - in_progress
+    - completed
+    - closed
+    type: string
+    x-enum-varnames:
+    - StatusPending
+    - StatusApproved
+    - StatusRejected
+    - StatusUnderReview
+    - StatusPlanned
+    - StatusInProgress
+    - StatusCompleted
+    - StatusClosed
+  github_com_minisource_feedback_internal_models.OfficialResponse:
+    properties:
+      content:
+        type: string
+      respondedAt:
+        type: string
+      respondedBy:
+        type: string
+      respondedByName:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  github_com_minisource_feedback_internal_models.Setting:
+    properties:
+      createdAt:
+        description: Timestamps
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      isPublic:
+        description: If true, visible to non-admins
+        type: boolean
+      key:
+        type: string
+      tenantId:
+        type: string
+      type:
+        $ref: '#/definitions/github_com_minisource_feedback_internal_models.SettingType'
+      updatedAt:
+        type: string
+      updatedBy:
+        type: string
+      value: {}
+    type: object
+  github_com_minisource_feedback_internal_models.SettingType:
+    enum:
+    - string
+    - number
+    - boolean
+    - json
+    type: string
+    x-enum-varnames:
+    - SettingTypeString
+    - SettingTypeNumber
+    - SettingTypeBool
+    - SettingTypeJSON
+  github_com_minisource_feedback_internal_models.SubscribeRequest:
+    properties:
+      categoryId:
+        type: string
+      emailEnabled:
+        type: boolean
+      feedbackId:
+        type: string
+      pushEnabled:
+        type: boolean
+      subscribeAll:
+        type: boolean
+      types:
+        items:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.SubscriptionType'
+        type: array
+    type: object
+  github_com_minisource_feedback_internal_models.Subscription:
+    properties:
+      categoryId:
+        description: Subscribe to category
+        type: string
+      createdAt:
+        description: Timestamps
+        type: string
+      emailEnabled:
+        description: Notification preferences
+        type: boolean
+      feedbackId:
+        description: What to subscribe to
+        type: string
+      id:
+        type: string
+      isActive:
+        description: Status
+        type: boolean
+      pushEnabled:
+        type: boolean
+      subscribeAll:
+        description: Subscribe to all new feedback
+        type: boolean
+      tenantId:
+        type: string
+      types:
+        description: Subscription types
+        items:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.SubscriptionType'
+        type: array
+      unsubscribedAt:
+        type: string
+      updatedAt:
+        type: string
+      userEmail:
+        type: string
+      userId:
+        type: string
+    type: object
+  github_com_minisource_feedback_internal_models.SubscriptionResponse:
+    properties:
+      categoryId:
+        type: string
+      createdAt:
+        type: string
+      emailEnabled:
+        type: boolean
+      feedbackId:
+        type: string
+      id:
+        type: string
+      pushEnabled:
+        type: boolean
+      subscribeAll:
+        type: boolean
+      types:
+        items:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.SubscriptionType'
+        type: array
+    type: object
+  github_com_minisource_feedback_internal_models.SubscriptionType:
+    enum:
+    - new_feedback
+    - feedback_update
+    - status_change
+    - new_comment
+    - official_response
+    - all
+    type: string
+    x-enum-varnames:
+    - SubNewFeedback
+    - SubFeedbackUpdate
+    - SubStatusChange
+    - SubNewComment
+    - SubOfficialResponse
+    - SubAll
+  github_com_minisource_feedback_internal_models.UpdateCategoryRequest:
+    properties:
+      color:
+        type: string
+      description:
+        maxLength: 500
+        type: string
+      icon:
+        type: string
+      isActive:
+        type: boolean
+      name:
+        maxLength: 100
+        type: string
+      parentId:
+        type: string
+      slug:
+        type: string
+      sortOrder:
+        type: integer
+    type: object
+  github_com_minisource_feedback_internal_models.UpdateCommentRequest:
+    properties:
+      content:
+        maxLength: 2000
+        type: string
+    required:
+    - content
+    type: object
+  github_com_minisource_feedback_internal_models.UpdateFeedbackRequest:
+    properties:
+      categoryId:
+        type: string
+      description:
+        maxLength: 10000
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+      title:
+        maxLength: 200
+        type: string
+    type: object
+  github_com_minisource_feedback_internal_models.UpdateSettingRequest:
+    properties:
+      description:
+        type: string
+      isPublic:
+        type: boolean
+      key:
+        type: string
+      type:
+        type: string
+      value: {}
+    required:
+    - key
+    - value
+    type: object
+  github_com_minisource_feedback_internal_models.UpdateSubscriptionRequest:
+    properties:
+      emailEnabled:
+        type: boolean
+      pushEnabled:
+        type: boolean
+      types:
+        items:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.SubscriptionType'
+        type: array
+    type: object
+  github_com_minisource_feedback_internal_models.VoteRequest:
+    properties:
+      voteType:
+        allOf:
+        - $ref: '#/definitions/github_com_minisource_feedback_internal_models.VoteType'
+        enum:
+        - up
+        - down
+    required:
+    - voteType
+    type: object
+  github_com_minisource_feedback_internal_models.VoteType:
+    enum:
+    - up
+    - down
+    type: string
+    x-enum-varnames:
+    - VoteUp
+    - VoteDown
+host: localhost:5012
+info:
+  contact: {}
+  description: Feedback management service for Minisource
+  title: Feedback Service API
+  version: "1.0"
+paths:
+  /admin/categories:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create category request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.CreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.Category'
+      summary: Create category
+      tags:
+      - Admin - Categories
+  /admin/categories/{id}:
+    delete:
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      summary: Delete category
+      tags:
+      - Admin - Categories
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update category request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.UpdateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.Category'
+      summary: Update category
+      tags:
+      - Admin - Categories
+  /admin/feedback/{id}/approve:
+    post:
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.Feedback'
+      summary: Approve feedback
+      tags:
+      - Admin - Moderation
+  /admin/feedback/{id}/reject:
+    post:
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.Feedback'
+      summary: Reject feedback
+      tags:
+      - Admin - Moderation
+  /admin/feedback/{id}/response:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Official response
+        in: body
+        name: body
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.Feedback'
+      summary: Add official response
+      tags:
+      - Admin - Moderation
+  /admin/feedback/{id}/status:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Status update request
+        in: body
+        name: body
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.Feedback'
+      summary: Update feedback status
+      tags:
+      - Admin - Moderation
+  /admin/feedback/pending:
+    get:
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get pending feedback
+      tags:
+      - Admin - Moderation
+  /admin/settings:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_minisource_feedback_internal_models.Setting'
+            type: array
+      summary: Get all settings
+      tags:
+      - Admin - Settings
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update setting request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.UpdateSettingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update setting
+      tags:
+      - Admin - Settings
+  /admin/settings/initialize:
+    post:
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Initialize default settings
+      tags:
+      - Admin - Settings
+  /admin/stats:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.FeedbackStats'
+      summary: Get dashboard statistics
+      tags:
+      - Admin - Stats
+  /categories:
+    get:
+      parameters:
+      - description: Only active categories
+        in: query
+        name: active_only
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_minisource_feedback_internal_models.Category'
+            type: array
+      summary: List categories
+      tags:
+      - Categories
+  /categories/{id}:
+    get:
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.Category'
+      summary: Get category
+      tags:
+      - Categories
+  /comments/{id}:
+    delete:
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      summary: Delete comment
+      tags:
+      - Comments
+    get:
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comment.Comment'
+      summary: Get comment by ID
+      tags:
+      - Comments
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update comment request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.UpdateCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comment.Comment'
+      summary: Update comment
+      tags:
+      - Comments
+  /comments/{id}/reactions:
+    delete:
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      summary: Remove reaction from comment
+      tags:
+      - Comments
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Reaction request
+        in: body
+        name: body
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Add reaction to comment
+      tags:
+      - Comments
+  /comments/{id}/replies:
+    get:
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comment.RepliesResponse'
+      summary: Get replies to a comment
+      tags:
+      - Comments
+  /feedback:
+    get:
+      parameters:
+      - collectionFormat: csv
+        description: Filter by status
+        in: query
+        items:
+          type: string
+        name: status
+        type: array
+      - description: Filter by category
+        in: query
+        name: category_id
+        type: string
+      - collectionFormat: csv
+        description: Filter by tags
+        in: query
+        items:
+          type: string
+        name: tags
+        type: array
+      - description: Search text
+        in: query
+        name: search
+        type: string
+      - description: Sort by (new, top, trending, most_commented)
+        in: query
+        name: sort_by
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List feedback
+      tags:
+      - Feedback
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create feedback request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.CreateFeedbackRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.Feedback'
+      summary: Create feedback
+      tags:
+      - Feedback
+  /feedback/{feedback_id}/comments:
+    get:
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: feedback_id
+        required: true
+        type: string
+      - description: Parent comment ID
+        in: query
+        name: parent_id
+        type: string
+      - description: Sort by (created_at, like_count)
+        in: query
+        name: sort_by
+        type: string
+      - description: Sort order (asc, desc)
+        in: query
+        name: sort_order
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comment.ListCommentsResponse'
+      summary: List comments
+      tags:
+      - Comments
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: feedback_id
+        required: true
+        type: string
+      - description: Create comment request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.CreateCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/comment.Comment'
+      summary: Create comment
+      tags:
+      - Comments
+  /feedback/{feedback_id}/comments/stats:
+    get:
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: feedback_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comment.CommentStats'
+      summary: Get comment statistics
+      tags:
+      - Comments
+  /feedback/{feedback_id}/subscription:
+    get:
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: feedback_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      summary: Check subscription status
+      tags:
+      - Subscriptions
+  /feedback/{feedback_id}/unsubscribe:
+    delete:
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: feedback_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      summary: Unsubscribe from feedback
+      tags:
+      - Subscriptions
+  /feedback/{id}:
+    delete:
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      summary: Delete feedback
+      tags:
+      - Feedback
+    get:
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.FeedbackResponse'
+      summary: Get feedback by ID
+      tags:
+      - Feedback
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update feedback request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.UpdateFeedbackRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.Feedback'
+      summary: Update feedback
+      tags:
+      - Feedback
+  /feedback/{id}/vote:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Vote request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.VoteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Vote on feedback
+      tags:
+      - Feedback
+  /feedback/stats:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.FeedbackStats'
+      summary: Get feedback statistics
+      tags:
+      - Feedback
+  /feedback/trending:
+    get:
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_minisource_feedback_internal_models.FeedbackResponse'
+            type: array
+      summary: Get trending feedback
+      tags:
+      - Feedback
+  /health:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Health check
+      tags:
+      - Health
+  /ready:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Readiness check
+      tags:
+      - Health
+  /settings:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get public settings
+      tags:
+      - Settings
+  /subscriptions:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_minisource_feedback_internal_models.SubscriptionResponse'
+            type: array
+      summary: List user subscriptions
+      tags:
+      - Subscriptions
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Subscribe request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.SubscribeRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.Subscription'
+      summary: Subscribe to feedback/category
+      tags:
+      - Subscriptions
+  /subscriptions/{id}:
+    delete:
+      parameters:
+      - description: Subscription ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      summary: Unsubscribe
+      tags:
+      - Subscriptions
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Subscription ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update subscription request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_minisource_feedback_internal_models.UpdateSubscriptionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_minisource_feedback_internal_models.Subscription'
+      summary: Update subscription preferences
+      tags:
+      - Subscriptions
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

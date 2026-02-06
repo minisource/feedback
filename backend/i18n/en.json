@@ -1,0 +1,58 @@
+{
+  "errors": {
+    "internal_error": "An internal error occurred",
+    "bad_request": "Bad request",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "not_found": "Not found",
+    "conflict": "Conflict"
+  },
+  "feedback": {
+    "created": "Feedback created successfully",
+    "updated": "Feedback updated successfully",
+    "deleted": "Feedback deleted successfully",
+    "not_found": "Feedback not found",
+    "anonymous_disabled": "Anonymous feedback is disabled",
+    "approval_required": "Feedback submitted for approval",
+    "approved": "Feedback approved",
+    "rejected": "Feedback rejected"
+  },
+  "comment": {
+    "created": "Comment created successfully",
+    "updated": "Comment updated successfully",
+    "deleted": "Comment deleted successfully",
+    "not_found": "Comment not found",
+    "max_depth_reached": "Maximum comment depth reached"
+  },
+  "vote": {
+    "recorded": "Vote recorded",
+    "removed": "Vote removed",
+    "changed": "Vote changed",
+    "invalid_type": "Invalid vote type",
+    "voting_disabled": "Voting is disabled"
+  },
+  "category": {
+    "created": "Category created successfully",
+    "updated": "Category updated successfully",
+    "deleted": "Category deleted successfully",
+    "not_found": "Category not found"
+  },
+  "subscription": {
+    "created": "Subscription created successfully",
+    "updated": "Subscription updated successfully",
+    "deleted": "Unsubscribed successfully",
+    "not_found": "Subscription not found",
+    "already_subscribed": "Already subscribed"
+  },
+  "setting": {
+    "updated": "Setting updated successfully",
+    "initialized": "Settings initialized"
+  },
+  "validation": {
+    "title_required": "Title is required",
+    "description_required": "Description is required",
+    "content_required": "Content is required",
+    "vote_type_required": "Vote type is required",
+    "invalid_status": "Invalid status"
+  }
+}

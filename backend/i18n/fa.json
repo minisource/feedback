@@ -1,0 +1,58 @@
+{
+  "errors": {
+    "internal_error": "یک خطای داخلی رخ داد",
+    "bad_request": "درخواست نامعتبر",
+    "unauthorized": "احراز هویت نشده",
+    "forbidden": "دسترسی ممنوع",
+    "not_found": "یافت نشد",
+    "conflict": "تعارض"
+  },
+  "feedback": {
+    "created": "بازخورد با موفقیت ایجاد شد",
+    "updated": "بازخورد با موفقیت به‌روزرسانی شد",
+    "deleted": "بازخورد با موفقیت حذف شد",
+    "not_found": "بازخورد یافت نشد",
+    "anonymous_disabled": "بازخورد ناشناس غیرفعال است",
+    "approval_required": "بازخورد برای تایید ارسال شد",
+    "approved": "بازخورد تایید شد",
+    "rejected": "بازخورد رد شد"
+  },
+  "comment": {
+    "created": "نظر با موفقیت ایجاد شد",
+    "updated": "نظر با موفقیت به‌روزرسانی شد",
+    "deleted": "نظر با موفقیت حذف شد",
+    "not_found": "نظر یافت نشد",
+    "max_depth_reached": "حداکثر عمق نظر رسیده است"
+  },
+  "vote": {
+    "recorded": "رای ثبت شد",
+    "removed": "رای حذف شد",
+    "changed": "رای تغییر کرد",
+    "invalid_type": "نوع رای نامعتبر است",
+    "voting_disabled": "رای‌گیری غیرفعال است"
+  },
+  "category": {
+    "created": "دسته‌بندی با موفقیت ایجاد شد",
+    "updated": "دسته‌بندی با موفقیت به‌روزرسانی شد",
+    "deleted": "دسته‌بندی با موفقیت حذف شد",
+    "not_found": "دسته‌بندی یافت نشد"
+  },
+  "subscription": {
+    "created": "اشتراک با موفقیت ایجاد شد",
+    "updated": "اشتراک با موفقیت به‌روزرسانی شد",
+    "deleted": "لغو اشتراک با موفقیت انجام شد",
+    "not_found": "اشتراک یافت نشد",
+    "already_subscribed": "قبلاً مشترک شده‌اید"
+  },
+  "setting": {
+    "updated": "تنظیمات با موفقیت به‌روزرسانی شد",
+    "initialized": "تنظیمات اولیه انجام شد"
+  },
+  "validation": {
+    "title_required": "عنوان الزامی است",
+    "description_required": "توضیحات الزامی است",
+    "content_required": "محتوا الزامی است",
+    "vote_type_required": "نوع رای الزامی است",
+    "invalid_status": "وضعیت نامعتبر است"
+  }
+}

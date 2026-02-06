@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  feedback:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: feedback-service-dev
+    ports:
+      - "5012:5012"
+    environment:
+      - SERVER_PORT=5012
+      - SERVER_HOST=0.0.0.0
+      - MONGODB_URI=mongodb://mongodb:27017
+      - MONGODB_DATABASE=minisource_feedback_dev
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - AUTH_SERVICE_URL=http://host.docker.internal:8080
+      - AUTH_CLIENT_ID=feedback-service
+      - AUTH_CLIENT_SECRET=feedback-service-secret-key
+      - STORAGE_SERVICE_URL=http://host.docker.internal:5001
+      - NOTIFIER_SERVICE_URL=host.docker.internal:9003
+      - LOG_LEVEL=debug
+    volumes:
+      - .:/app
+      - /app/bin
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - feedback-dev-network
+
+  mongodb:
+    image: mongo:7
+    container_name: feedback-mongodb-dev
+    ports:
+      - "27020:27017"
+    volumes:
+      - feedback-mongodb-dev-data:/data/db
+    networks:
+      - feedback-dev-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: feedback-redis-dev
+    ports:
+      - "6382:6379"
+    volumes:
+      - feedback-redis-dev-data:/data
+    networks:
+      - feedback-dev-network
+
+volumes:
+  feedback-mongodb-dev-data:
+  feedback-redis-dev-data:
+
+networks:
+  feedback-dev-network:
+    driver: bridge

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  feedback:
+    build: .
+    container_name: feedback-service
+    ports:
+      - "5012:5012"
+    environment:
+      - SERVER_PORT=5012
+      - MONGODB_URI=mongodb://mongodb:27017
+      - MONGODB_DATABASE=minisource_feedback
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - AUTH_SERVICE_URL=http://auth:8080
+      - AUTH_CLIENT_ID=feedback-service
+      - AUTH_CLIENT_SECRET=feedback-service-secret-key
+      - STORAGE_SERVICE_URL=http://storage:5001
+      - NOTIFIER_SERVICE_URL=notifier:9003
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - minisource-network
+
+  mongodb:
+    image: mongo:7
+    container_name: feedback-mongodb
+    ports:
+      - "27020:27017"
+    volumes:
+      - feedback-mongodb-data:/data/db
+    networks:
+      - minisource-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: feedback-redis
+    ports:
+      - "6382:6379"
+    volumes:
+      - feedback-redis-data:/data
+    networks:
+      - minisource-network
+
+volumes:
+  feedback-mongodb-data:
+  feedback-redis-data:
+
+networks:
+  minisource-network:
+    external: true
