@@ -9,7 +9,7 @@ require (
 	github.com/minisource/go-common v0.0.4-0.20250402190339-caa3304676a9
 	github.com/minisource/go-sdk v0.0.0-00010101000000-000000000000
 	github.com/swaggo/swag v1.16.4
-	go.mongodb.org/mongo-driver v1.17.1
+	go.mongodb.org/mongo-driver v1.17.9
 )
 
 require (
