@@ -1,6 +1,6 @@
 services:
   app:
-    image: IMAGE_FULL
+    image: minisource/feedback-user:${TAG:-latest}
     ports:
       - "${PORT}:${PORT}"
     env_file:

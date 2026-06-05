@@ -234,15 +234,26 @@ make run
 
 ## Docker
 
-Build and run with Docker:
+Images are published to [Docker Hub](https://hub.docker.com/orgs/minisource/repositories) on every successful build to `main`.
+
+| Image | Tags |
+|-------|------|
+| `minisource/feedback-backend` | `latest`, commit SHA |
 
 ```bash
-# Build image
-docker build -t feedback-service .
+# Production (pre-built image)
+export TAG=latest
+docker compose -f docker-compose.prod.yml up -d
 
-# Run with docker-compose
-docker-compose up -d
+# Local build
+docker build -t minisource/feedback-backend .
+docker compose up -d
 ```
+
+### GitHub Actions secrets
+
+- `DOCKERHUB_USERNAME` — Docker Hub username
+- `DOCKERHUB_TOKEN` — Docker Hub access token
 
 ## Health Checks
 

@@ -75,8 +75,12 @@ func AuthMiddleware(cfg AuthConfig) fiber.Handler {
 			}
 		}
 
+		userID := result.UserID
+		if userID == "" {
+			userID = result.ClientID
+		}
 		// Set user info in context
-		c.Locals("userId", result.ClientID)
+		c.Locals("userId", userID)
 		c.Locals("userName", result.ServiceName)
 		c.Locals("userEmail", "")
 		c.Locals("isAdmin", isAdmin)
@@ -100,10 +104,11 @@ func RequireAuthMiddleware() fiber.Handler {
 	}
 }
 
-// hasAdminScope checks if scopes include admin
+// hasAdminScope checks if scopes or roles include admin access.
 func hasAdminScope(scopes []string) bool {
 	for _, scope := range scopes {
-		if scope == "feedback:admin" || scope == "admin" {
+		switch scope {
+		case "feedback:admin", "admin", "super_admin", "supervisor":
 			return true
 		}
 	}

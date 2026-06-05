@@ -69,8 +69,11 @@ type StorageConfig struct {
 
 // NotifierConfig holds notifier service configuration
 type NotifierConfig struct {
-	ServiceURL string
-	Enabled    bool
+	ServiceURL   string
+	ClientID     string
+	ClientSecret string
+	AdminUserID  string
+	Enabled      bool
 }
 
 // CommentConfig holds comment service configuration
@@ -144,8 +147,11 @@ func Load() (*Config, error) {
 			AllowedTypes: getEnvAsSlice("STORAGE_ALLOWED_TYPES", []string{"image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"}),
 		},
 		Notifier: NotifierConfig{
-			ServiceURL: getEnv("NOTIFIER_SERVICE_URL", "localhost:9003"),
-			Enabled:    getEnvAsBool("NOTIFIER_ENABLED", true),
+			ServiceURL:   getEnv("NOTIFIER_SERVICE_URL", "http://localhost:9002"),
+			ClientID:     getEnv("NOTIFIER_CLIENT_ID", "feedback-service"),
+			ClientSecret: getEnv("NOTIFIER_CLIENT_SECRET", "feedback-service-secret-key"),
+			AdminUserID:  getEnv("NOTIFIER_ADMIN_USER_ID", ""),
+			Enabled:      getEnvAsBool("NOTIFIER_ENABLED", true),
 		},
 		Comment: CommentConfig{
 			ServiceURL: getEnv("COMMENT_SERVICE_URL", "http://localhost:5010"),

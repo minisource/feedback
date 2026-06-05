@@ -56,13 +56,27 @@ Administration dashboard for managing feedback and moderation.
 
 ### With Docker Compose
 
-```bash
-# Start all services
-docker-compose -f backend/docker-compose.yml up -d
+Images are published to [Docker Hub](https://hub.docker.com/orgs/minisource/repositories) on every successful build to `main`.
 
-# Start user portal
-cd user && docker-compose up -d
+| Image | Tags |
+|-------|------|
+| `minisource/feedback-backend` | `latest`, commit SHA |
+| `minisource/feedback-user` | `latest`, commit SHA |
+
+```bash
+# Production (pre-built images)
+export TAG=latest
+docker compose -f backend/docker-compose.prod.yml up -d
+cd user && docker compose up -d
+
+# Local development (build from source)
+docker compose -f backend/docker-compose.yml up -d
 ```
+
+### GitHub Actions secrets
+
+- `DOCKERHUB_USERNAME` — Docker Hub username
+- `DOCKERHUB_TOKEN` — Docker Hub access token
 
 ### Development Setup
 

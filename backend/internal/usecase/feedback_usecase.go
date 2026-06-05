@@ -3,9 +3,11 @@ package usecase
 import (
 	"context"
 	"errors"
+	"log"
 	"math"
 	"time"
 
+	"github.com/minisource/feedback/config"
 	"github.com/minisource/feedback/internal/models"
 	"github.com/minisource/feedback/internal/repository"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -23,6 +25,20 @@ var (
 	ErrInvalidStatus     = errors.New("invalid status")
 )
 
+// NotifierClient sends in-app notifications via the Notifier service.
+type NotifierClient interface {
+	SendNotification(ctx context.Context, notification NotificationRequest) error
+}
+
+// NotificationRequest represents a notification to send.
+type NotificationRequest struct {
+	Type       string
+	Recipients []string
+	Title      string
+	Body       string
+	Data       map[string]string
+}
+
 // FeedbackUsecase handles feedback business logic
 type FeedbackUsecase struct {
 	feedbackRepo     *repository.FeedbackRepository
@@ -30,6 +46,8 @@ type FeedbackUsecase struct {
 	categoryRepo     *repository.CategoryRepository
 	settingRepo      *repository.SettingRepository
 	subscriptionRepo *repository.SubscriptionRepository
+	notifier         NotifierClient
+	cfg              *config.Config
 }
 
 // NewFeedbackUsecase creates a new feedback usecase
@@ -39,6 +57,8 @@ func NewFeedbackUsecase(
 	categoryRepo *repository.CategoryRepository,
 	settingRepo *repository.SettingRepository,
 	subscriptionRepo *repository.SubscriptionRepository,
+	notifier NotifierClient,
+	cfg *config.Config,
 ) *FeedbackUsecase {
 	return &FeedbackUsecase{
 		feedbackRepo:     feedbackRepo,
@@ -46,6 +66,8 @@ func NewFeedbackUsecase(
 		categoryRepo:     categoryRepo,
 		settingRepo:      settingRepo,
 		subscriptionRepo: subscriptionRepo,
+		notifier:         notifier,
+		cfg:              cfg,
 	}
 }
 
@@ -130,7 +152,52 @@ func (u *FeedbackUsecase) Create(ctx context.Context, req models.CreateFeedbackR
 		_ = u.subscriptionRepo.Create(ctx, sub)
 	}
 
+	u.sendNewFeedbackNotification(ctx, tenantID, feedback)
+
 	return feedback, nil
+}
+
+func (u *FeedbackUsecase) sendNewFeedbackNotification(ctx context.Context, tenantID string, feedback *models.Feedback) {
+	if u.notifier == nil || u.cfg == nil || !u.cfg.Notifier.Enabled || u.cfg.Notifier.AdminUserID == "" {
+		return
+	}
+
+	setting, _ := u.settingRepo.Get(ctx, tenantID, models.SettingNotifyOnNewFeedback)
+	if setting != nil && setting.Value == false {
+		return
+	}
+
+	notifyCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	title := "New Feedback"
+	if feedback.Status == models.StatusPending {
+		title = "Feedback Pending Approval"
+	}
+
+	notification := NotificationRequest{
+		Type:       "feedback.new",
+		Recipients: []string{u.cfg.Notifier.AdminUserID},
+		Title:      title,
+		Body:       truncateFeedbackText(feedback.Title, 100),
+		Data: map[string]string{
+			"feedback_id": feedback.ID.Hex(),
+			"tenant_id":   feedback.TenantID,
+			"author_id":   feedback.AuthorID,
+			"status":      string(feedback.Status),
+		},
+	}
+
+	if err := u.notifier.SendNotification(notifyCtx, notification); err != nil {
+		log.Printf("Failed to send feedback notification: %v", err)
+	}
+}
+
+func truncateFeedbackText(s string, max int) string {
+	if len(s) <= max {
+		return s
+	}
+	return s[:max] + "..."
 }
 
 // GetByID gets feedback by ID

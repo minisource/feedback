@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/swagger"
 	"github.com/minisource/feedback/config"
+	"github.com/minisource/feedback/internal/client"
 	"github.com/minisource/feedback/internal/database"
 	"github.com/minisource/feedback/internal/handler"
 	"github.com/minisource/feedback/internal/middleware"
@@ -84,8 +85,11 @@ func (r *Router) setupRoutes(authClient *auth.Client) {
 		GetToken: authClient.GetToken,
 	})
 
+	// Notifier client for cross-service notifications
+	notifierClient := client.NewServiceNotifier(r.cfg)
+
 	// Initialize usecases
-	feedbackUsecase := usecase.NewFeedbackUsecase(feedbackRepo, voteRepo, categoryRepo, settingRepo, subscriptionRepo)
+	feedbackUsecase := usecase.NewFeedbackUsecase(feedbackRepo, voteRepo, categoryRepo, settingRepo, subscriptionRepo, notifierClient, r.cfg)
 	subscriptionUsecase := usecase.NewSubscriptionUsecase(subscriptionRepo, feedbackRepo, categoryRepo)
 	adminUsecase := usecase.NewAdminUsecase(feedbackRepo, categoryRepo, settingRepo)
 

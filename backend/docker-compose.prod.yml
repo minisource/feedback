@@ -1,0 +1,21 @@
+services:
+  feedback-backend:
+    image: minisource/feedback-backend:${TAG:-latest}
+    container_name: feedback-backend
+    ports:
+      - "5009:5009"
+    env_file:
+      - .env
+    networks:
+      - minisource-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5009/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  minisource-network:
+    external: true
